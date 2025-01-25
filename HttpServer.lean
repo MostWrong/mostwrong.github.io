@@ -140,6 +140,22 @@ def loadPosts (dir: System.FilePath) : IO (List Post) := do
       | none => continue
   return posts.reverse
 
+def String.splitReturnDelimitersAux (s : String) (p : Char → Bool) (b : Pos) (i : Pos) (r : List String) : List String :=
+  if h : s.atEnd i then
+    let r := (s.extract b i)::r
+    r.reverse
+  else
+    have := Nat.sub_lt_sub_left (Nat.gt_of_not_le (mt decide_eq_true h)) (lt_next s _)
+    if p (s.get i) then
+      let i' := s.next i
+      splitReturnDelimitersAux s p i' i' ((s.get i).toString :: (s.extract b i) :: r)
+    else
+      splitReturnDelimitersAux s p b (s.next i) r
+termination_by _ => s.endPos.1 - i.1
+
+def String.splitReturnDelimiters (s : String) (p : Char → Bool) : List String :=
+  splitReturnDelimitersAux s p 0 0 []
+
 def processLinks (line: String) : String :=
   let parts := line.split (λ c => c == '[' || c == ']' || c == '(' || c == ')')
   let rec process : List String → String → String
