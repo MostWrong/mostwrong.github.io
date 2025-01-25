@@ -171,7 +171,7 @@ def processMarkdown (content: String) : String := Id.run do
         processed := processed ++ s!"<pre><code class=\"language-{language}\">"
         inCodeBlock := true
     else if inCodeBlock then
-      processed := processed ++ line ++ "¬"
+      processed := processed ++ line ++ "\n"
     else if line.startsWith "<a" then
       processed := processed ++ line ++ "<br>"
     else
@@ -206,7 +206,7 @@ def generateIndex (posts: List Post) : String :=
 
 def main : IO Unit := do
   let sock ← Socket.mk Socket.AddressFamily.inet Socket.Typ.stream
-  Socket.bind sock (Socket.SockAddr4.v4 (Socket.IPv4Addr.mk 127 0 0 1) 3000)
+  Socket.bind sock (Socket.SockAddr4.v4 (Socket.IPv4Addr.mk 0 0 0 0) 3000)
   Socket.listen sock 32
 
   let posts ← loadPosts (System.FilePath.mk ".")
