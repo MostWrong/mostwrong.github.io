@@ -223,7 +223,7 @@ def generateIndex (posts: List Post) (cssContent: String) : String :=
 
 def main : IO Unit := do
   let sock ← Socket.mk Socket.AddressFamily.inet Socket.Typ.stream
-  Socket.bind sock (Socket.SockAddr4.v4 (Socket.IPv4Addr.mk 0 0 0 0) 3001)
+  Socket.bind sock (Socket.SockAddr4.v4 (Socket.IPv4Addr.mk 0 0 0 0) 3000)
   Socket.listen sock 32
 
   let posts ← loadPosts (System.FilePath.mk ".")
