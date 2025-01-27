@@ -1,0 +1,23 @@
+:root {
+    --trans-pink: #F7A8B8;
+    --trans-blue: #55CDFC;
+    --trans-white: #FFFFFF;
+  }
+  
+  .trans-theme {
+    background: linear-gradient(
+      to bottom,
+      var(--trans-blue) 20%,
+      var(--trans-pink) 20% 40%,
+      var(--trans-white) 40% 60%,
+      var(--trans-pink) 60% 80%,
+      var(--trans-blue) 80% 100%
+    );
+  }
+  
+  .trans-bg-blue { background-color: var(--trans-blue); }
+  .trans-bg-pink { background-color: var(--trans-pink); }
+  .trans-bg-white { background-color: var(--trans-white); }
+  
+  .trans-text-blue { color: var(--trans-blue); }
+  .trans-text-pink { color: var(--trans-pink); }

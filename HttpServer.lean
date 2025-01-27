@@ -194,38 +194,40 @@ def processMarkdown (content: String) : String := Id.run do
       processed := processed ++ processLinks line ++ "<br>"
   processed
 
-def generateHTML (post : Post) : String :=
+def generateHTML (post : Post) (cssContent: String) : String :=
   "<html>" ++
   "<head><meta charset='UTF-8'>" ++
     "<title>" ++ post.title ++ "</title>" ++
+    "<style>" ++ cssContent ++ "</style>" ++
     "<link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css\">" ++
     "<script src=\"https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js\"></script>" ++
     "<script src=\"https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/rust.min.js\"></script>" ++
     "<script src=\"https://unpkg.com/highlightjs-lean/dist/lean.min.js\"></script>" ++
     "<script>hljs.highlightAll();</script>" ++
   "</head>" ++
-  "<body>" ++
+  "<body class=\"trans-theme\">" ++
     "<h1>" ++ post.title ++ "</h1>" ++
     "<p>By " ++ post.author ++ " on " ++ post.date ++ "</p>" ++
     "<div class='content'>" ++ processMarkdown post.content ++ "</div>" ++
   "</body>" ++
 "</html>"
 
-def generateIndex (posts: List Post) : String :=
+def generateIndex (posts: List Post) (cssContent: String) : String :=
   let links := posts.map (λ post =>
     s!"<li><a href=\"/{post.fileName}\">{post.date} - {post.title}</a></li>")
   let linksList := String.intercalate "\n" links
-  "<html><head><title>typeo's musings (lean edition)</title></head><body>" ++
+  "<html><head><style>" ++ cssContent ++ "</style><title>typeo's musings (lean edition)</title></head><body class=\"trans-theme\">" ++
   "<h1>Braindump: </h1>" ++
   s!"<ul>{linksList}</ul>" ++
   "</body></html>"
 
 def main : IO Unit := do
   let sock ← Socket.mk Socket.AddressFamily.inet Socket.Typ.stream
-  Socket.bind sock (Socket.SockAddr4.v4 (Socket.IPv4Addr.mk 0 0 0 0) 3000)
+  Socket.bind sock (Socket.SockAddr4.v4 (Socket.IPv4Addr.mk 0 0 0 0) 3001)
   Socket.listen sock 32
 
   let posts ← loadPosts (System.FilePath.mk ".")
+  let cssContent ← IO.FS.readFile "trans.css"
 
   try repeat do
     let (sock', _) ← Socket.accept sock
@@ -244,12 +246,12 @@ def main : IO Unit := do
       | _ => Response.methodNotAllowed
 
     let htmlContent ← match path with
-      | #[] => pure (generateIndex posts)
+      | #[] => pure (generateIndex posts cssContent)
       | #[pageName] =>
         match posts.find? (λ post => post.fileName == pageName) with
-        | some post => pure (generateHTML post)
-        | none => pure ("<html><body><h1>" ++ "Page Not Found" ++ "</h1></body></html>")
-      | _ => pure ("<html><body><h1>" ++ "Page Not Found" ++ "</h1></body></html>")
+        | some post => pure (generateHTML post cssContent)
+        | none => pure ("<html><body class=\"trans-theme\"<h1>" ++ "Page Not Found" ++ "</h1></body></html>")
+      | _ => pure ("<html><body class=\"trans-theme\"<h1>" ++ "Page Not Found" ++ "</h1></body></html>")
 
     sendResponse sock' response htmlContent
     Socket.close sock'
