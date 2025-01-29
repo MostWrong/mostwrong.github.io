@@ -6,6 +6,19 @@ open Parser
 abbrev Request := Http.Request Substring
 abbrev Response := Http.Response Substring
 
+-- adapted from https://leanprover-community.github.io/archive/stream/270676-lean4/topic/String.2EcontainsSubstring.html#371017806
+def String.isSubstr (pattern : String) (s : String) : Bool :=
+  aux 0
+where aux (i : String.Pos) :=
+  if h : i.byteIdx < s.utf8ByteSize then
+    have : s.utf8ByteSize - (s.next i).byteIdx < s.utf8ByteSize - i.byteIdx :=
+      Nat.sub_lt_sub_left h (String.lt_next _ _)
+    String.substrEq pattern 0 s i pattern.utf8ByteSize
+      || aux (s.next i)
+  else
+    false
+termination_by aux i => s.utf8ByteSize - i.byteIdx
+
 -- Receive and parse a request from a connected socket.
 -- The given socket should be in the "accepted" state.
 def recvRequest (sock : Socket) : IO (Http.Parser.Error ⊕ Request) := do
@@ -25,6 +38,35 @@ def sendResponse (sock : Socket) (response : Response) (htmlContent : String) : 
   let responseWithHeaders := { response with headers := updatedHeaders, body := htmlContent }
   let _ ← Socket.send sock responseWithHeaders.toString.toUTF8
   pure ()
+
+def sendBinaryResponse (sock : Socket) (response : Http.Response ByteArray) : IO Unit := do
+  let headerStr :=
+    s!"{response.version} {response.status.val}" ++
+    (response.status.canonicalReason.map (" " ++ ·) |>.getD "") ++
+    "\r\n" ++
+    response.headers.toRequestFormat ++
+    "\r\n\r\n"
+  let _ ← Socket.send sock headerStr.toUTF8
+  let _ ← Socket.send sock response.body
+  pure ()
+
+def servePDF (filePath : System.FilePath) : IO (Option (Http.Response ByteArray)) := do
+  if ← filePath.pathExists then
+    let content ← IO.FS.readBinFile filePath
+    -- Create headers with content type and length using proper HeaderName type
+    let headers := Http.Headers.empty
+    let contentTypeHeader := Http.HeaderName.ofHeaderString "Content-Type"
+    let contentLengthHeader := Http.HeaderName.ofHeaderString "Content-Length"
+    let headers := Http.Headers.add headers contentTypeHeader "application/pdf"
+    let headers := Http.Headers.add headers contentLengthHeader (toString content.size)
+    pure $ some {
+      version := Http.Version.HTTP_1_1
+      status := Http.StatusCode.OK
+      headers := headers
+      body := content
+    }
+  else
+    pure none
 
 namespace Response
 def ok : Response where
@@ -75,26 +117,12 @@ structure Post where
   author: String
   content: String
   fileName: String
-  deriving Inhabited
 
 def String.stripQuotes (s: String) : String :=
     if s.startsWith "\"" && s.endsWith "\"" then
       s.drop 1 |>.dropRight 1
     else
       s
-
--- adapted from https://leanprover-community.github.io/archive/stream/270676-lean4/topic/String.2EcontainsSubstring.html#371017806
-def String.isSubstr (pattern : String) (s : String) : Bool :=
-  aux 0
-where aux (i : String.Pos) :=
-  if h : i.byteIdx < s.utf8ByteSize then
-    have : s.utf8ByteSize - (s.next i).byteIdx < s.utf8ByteSize - i.byteIdx :=
-      Nat.sub_lt_sub_left h (String.lt_next _ _)
-    String.substrEq pattern 0 s i pattern.utf8ByteSize
-      || aux (s.next i)
-  else
-    false
-termination_by aux i => s.utf8ByteSize - i.byteIdx
 
 def parseFrontMatter (content: String) : Option Post := do
   let lines := content.splitOn "\n"
@@ -221,13 +249,88 @@ def generateIndex (posts: List Post) (cssContent: String) : String :=
   s!"<ul>{linksList}</ul>" ++
   "</body></html>"
 
+structure ContactForm where
+  email : String
+  message : String
+
+def ContactForm.toJson (form : ContactForm) : String :=
+  "{\"email_address\": \"" ++ form.email ++ "\", \"message\": \"" ++ form.message ++ "\"}"
+
+-- Add function to parse POST body into form data
+def parseFormData (body : String) : Option ContactForm := do
+  let params := body.splitOn "&"
+  let mut email := ""
+  let mut message := ""
+
+  for param in params do
+    let parts := param.splitOn "="
+    if parts.length ≥ 2 then
+      let key := parts[0]!
+      let value := parts[1]!.replace "+" " " -- Handle form-encoded spaces
+      match key with
+      | "email" => email := value
+      | "message" => message := value
+      | _ => pure ()
+
+  if email != "" && message != "" then
+    some { email := email, message := message }
+  else
+    none
+
+def handleContactForm (body : String) : IO Response := do
+  match parseFormData body with
+  | some form => do
+    IO.println s!"Contact form submission from {form.email}: {form.message}"
+    let headers := Http.Headers.empty
+    let locationHeader := Http.HeaderName.ofHeaderString "Location"
+    let headers := Http.Headers.add headers locationHeader "/thankyou"
+    pure { Response.ok with status := Http.StatusCode.FOUND, headers := headers }
+  | none =>
+    pure { Response.ok with status := Http.StatusCode.BAD_REQUEST, body := "Invalid form data" }
+
 def main : IO Unit := do
   let sock ← Socket.mk Socket.AddressFamily.inet Socket.Typ.stream
-  Socket.bind sock (Socket.SockAddr4.v4 (Socket.IPv4Addr.mk 0 0 0 0) 3001)
+  Socket.bind sock (Socket.SockAddr4.v4 (Socket.IPv4Addr.mk 0 0 0 0) 3000)
   Socket.listen sock 32
 
   let posts ← loadPosts (System.FilePath.mk ".")
   let cssContent ← IO.FS.readFile "trans.css"
+
+  -- Add HTML for the contact form and thank you page
+  let contactFormHTML := "
+    <html>
+    <head>
+      <style>" ++ cssContent ++ "</style>
+      <title>Contact Me</title>
+    </head>
+    <body class=\"trans-theme\">
+      <h1>Contact Me</h1>
+      <form method=\"POST\" action=\"/contact\">
+        <div>
+          <label for=\"email\">Email:</label><br>
+          <input type=\"email\" id=\"email\" name=\"email\" required>
+        </div>
+        <div>
+          <label for=\"message\">Message:</label><br>
+          <textarea id=\"message\" name=\"message\" required></textarea>
+        </div>
+        <button type=\"submit\">Send Message</button>
+      </form>
+    </body>
+    </html>"
+
+  let thankYouHTML := "
+    <html>
+    <head>
+      <style>" ++ cssContent ++ "</style>
+      <title>Thank You</title>
+    </head>
+    <body class=\"trans-theme\">
+      <h1>Thank You</h1>
+      <p>Your message has been received.</p>
+      <p><a href=\"/\">Return to home</a></p>
+    </body>
+    </html>"
 
   try repeat do
     let (sock', _) ← Socket.accept sock
@@ -240,20 +343,38 @@ def main : IO Unit := do
     IO.println (request |> Lean.toJson |> Lean.Json.compress)
     let path := normalizePath request.url.path
 
-    let response :=
-      match request.method with
-      | .GET => Response.ok
-      | _ => Response.methodNotAllowed
-
-    let htmlContent ← match path with
-      | #[] => pure (generateIndex posts cssContent)
-      | #[pageName] =>
+    match request.method, path with
+    | .GET, #[] =>
+      let htmlContent := generateIndex posts cssContent
+      sendResponse sock' Response.ok htmlContent
+    | .GET, #["contact"] =>
+      sendResponse sock' Response.ok contactFormHTML
+    | .GET, #["thankyou"] =>
+      sendResponse sock' Response.ok thankYouHTML
+    | .POST, #["contact"] =>
+      let response ← handleContactForm request.body.toString
+      sendResponse sock' response ""
+    | .GET, #[pageName] =>
+      if pageName.endsWith ".pdf" then
+        match (← servePDF (System.FilePath.mk s!"./pdfs/{pageName}")) with
+        | some response =>
+          sendBinaryResponse sock' response
+        | none =>
+          let htmlContent := "<html><body class=\"trans-theme\"><h1>PDF Not Found</h1></body></html>"
+          sendResponse sock' Response.notFound htmlContent
+      else
         match posts.find? (λ post => post.fileName == pageName) with
-        | some post => pure (generateHTML post cssContent)
-        | none => pure ("<html><body class=\"trans-theme\"<h1>" ++ "Page Not Found" ++ "</h1></body></html>")
-      | _ => pure ("<html><body class=\"trans-theme\"<h1>" ++ "Page Not Found" ++ "</h1></body></html>")
-
-    sendResponse sock' response htmlContent
+        | some post =>
+          let htmlContent := generateHTML post cssContent
+          sendResponse sock' Response.ok htmlContent
+        | none =>
+          let htmlContent := "<html><body class=\"trans-theme\"><h1>Page Not Found</h1></body></html>"
+          sendResponse sock' Response.notFound htmlContent
+    | .GET, _ =>
+      let htmlContent := "<html><body class=\"trans-theme\"><h1>Page Not Found</h1></body></html>"
+      sendResponse sock' Response.notFound htmlContent
+    | _, _ =>
+      sendResponse sock' Response.methodNotAllowed ""
     Socket.close sock'
   finally do
     Socket.close sock
