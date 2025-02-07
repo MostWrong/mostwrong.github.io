@@ -13,10 +13,10 @@ Essentially -- I'm looking for a partner who I can have interesting conversation
 
 I'm EA, rat-adjacent -- interests range from piano manufacturing, cooking to formal methods! In my spare time I do fun things, like meeting famous people (eg. Roko Mijic etc.) and contributing to discourse.
 
-I have been told it's a good idea to add two truths and one line. If you figure our which one is a lie send me an email...
+I have been told it's a good idea to add two truths and one line. If you figure out which one is a lie send me an email...
 
 1. Sugar snaps are my favourite vegetable.
 2. I scored over 30000 points on Word Mole (the Blackberry game).
-3. I've never won any sporting event.
+3. I've never won any (physical) sporting event.
 
 
