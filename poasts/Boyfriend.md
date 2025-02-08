@@ -13,8 +13,6 @@ I'm EA, rat-adjacent -- interests range from 🎹 piano manufacturing, 🍳 cook
 
 I have been told it's a good idea to add two truths and one lie. If you figure out which one is a lie send me an email... 🤔
 
-Statement                                                            | True/Lie?
--------------------------------------------------------------------- | ---------
-1. 🥬 Sugar snaps are my favourite vegetable.                        | ?
-2. 🎮 I scored over 30000 points on Word Mole (the Blackberry game). | ?
-3. 🏃‍♀️ I've never won any (physical) sporting event.                  | ?
+1. 🥬 Sugar snaps are my favourite vegetable.                        
+2. 🎮 I scored over 30000 points on Word Mole (the Blackberry game). 
+3. 🏃‍♀️ I've never won any (physical) sporting event.                  
