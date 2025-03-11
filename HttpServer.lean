@@ -186,18 +186,22 @@ def String.splitReturnDelimiters (s : String) (p : Char → Bool) : List String 
 
 def processLinks (line: String) : String :=
   let parts := line.split (λ c => c == '[' || c == ']' || c == '(' || c == ')')
-  let rec process : List String → String → String
-    | [], acc => acc
-    | [x], acc => acc ++ x
-    | (x :: y :: []), acc => acc ++ x ++ y
-    | (x :: y :: z :: rest), acc =>
+
+  let rec process (l: List String) (acc: String) : String :=
+    match l with
+    | [] => acc
+    | [x] => acc ++ x
+    | (x :: y :: []) => acc ++ x ++ y
+    | (x :: y :: z :: rest) =>
       if x == "" then
         process (y :: z :: rest) acc
       else if y == "" && z.startsWith "http" then
         process rest (acc ++ s!"<a href=\"{z}\">{x}</a>")
       else
         process (y :: z :: rest) (acc ++ x)
+
   process parts ""
+
 
 def processMarkdown (content: String) : String := Id.run do
   let lines := content.splitOn "\n"
