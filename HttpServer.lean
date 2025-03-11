@@ -244,49 +244,10 @@ def generateIndex (posts: List Post) (cssContent: String) : String :=
   let links := posts.map (λ post =>
     s!"<li><a href=\"/{post.fileName}\">{post.date} - {post.title}</a></li>")
   let linksList := String.intercalate "\n" links
-  "<html><head><style>" ++ cssContent ++ "</style><title>typeo's musings (lean edition)</title></head><body class=\"trans-theme\">" ++
+  "<html><meta charset='UTF-8'><head><style>" ++ cssContent ++ "</style><title>typeo's musings (lean edition)</title></head><body class=\"trans-theme\">" ++
   "<h1>Braindump: </h1>" ++
   s!"<ul>{linksList}</ul>" ++
   "</body></html>"
-
-structure ContactForm where
-  email : String
-  message : String
-
-def ContactForm.toJson (form : ContactForm) : String :=
-  "{\"email_address\": \"" ++ form.email ++ "\", \"message\": \"" ++ form.message ++ "\"}"
-
--- Add function to parse POST body into form data
-def parseFormData (body : String) : Option ContactForm := do
-  let params := body.splitOn "&"
-  let mut email := ""
-  let mut message := ""
-
-  for param in params do
-    let parts := param.splitOn "="
-    if parts.length ≥ 2 then
-      let key := parts[0]!
-      let value := parts[1]!.replace "+" " " -- Handle form-encoded spaces
-      match key with
-      | "email" => email := value
-      | "message" => message := value
-      | _ => pure ()
-
-  if email != "" && message != "" then
-    some { email := email, message := message }
-  else
-    none
-
-def handleContactForm (body : String) : IO Response := do
-  match parseFormData body with
-  | some form => do
-    IO.println s!"Contact form submission from {form.email}: {form.message}"
-    let headers := Http.Headers.empty
-    let locationHeader := Http.HeaderName.ofHeaderString "Location"
-    let headers := Http.Headers.add headers locationHeader "/thankyou"
-    pure { Response.ok with status := Http.StatusCode.FOUND, headers := headers }
-  | none =>
-    pure { Response.ok with status := Http.StatusCode.BAD_REQUEST, body := "Invalid form data" }
 
 def main : IO Unit := do
   let sock ← Socket.mk Socket.AddressFamily.inet Socket.Typ.stream
@@ -295,43 +256,6 @@ def main : IO Unit := do
 
   let posts ← loadPosts (System.FilePath.mk ".")
   let cssContent ← IO.FS.readFile "trans.css"
-
-  -- Add HTML for the contact form and thank you page
-  let contactFormHTML := "
-    <html>
-    <head>
-      <style>" ++ cssContent ++ "</style>
-      <title>Contact Me</title>
-    </head>
-    <body class=\"trans-theme\">
-      <h1>Contact Me</h1>
-      <form method=\"POST\" action=\"/contact\">
-        <div>
-          <label for=\"email\">Email:</label><br>
-          <input type=\"email\" id=\"email\" name=\"email\" required>
-        </div>
-        <div>
-          <label for=\"message\">Message:</label><br>
-          <textarea id=\"message\" name=\"message\" required></textarea>
-        </div>
-        <button type=\"submit\">Send Message</button>
-      </form>
-    </body>
-    </html>"
-
-  let thankYouHTML := "
-    <html>
-    <head>
-      <style>" ++ cssContent ++ "</style>
-      <title>Thank You</title>
-    </head>
-    <body class=\"trans-theme\">
-      <h1>Thank You</h1>
-      <p>Your message has been received.</p>
-      <p><a href=\"/\">Return to home</a></p>
-    </body>
-    </html>"
-
   try repeat do
     let (sock', _) ← Socket.accept sock
     let request ← match (← recvRequest sock') with
@@ -347,13 +271,6 @@ def main : IO Unit := do
     | .GET, #[] =>
       let htmlContent := generateIndex posts cssContent
       sendResponse sock' Response.ok htmlContent
-    | .GET, #["contact"] =>
-      sendResponse sock' Response.ok contactFormHTML
-    | .GET, #["thankyou"] =>
-      sendResponse sock' Response.ok thankYouHTML
-    | .POST, #["contact"] =>
-      let response ← handleContactForm request.body.toString
-      sendResponse sock' response ""
     | .GET, #[pageName] =>
       if pageName.endsWith ".pdf" then
         match (← servePDF (System.FilePath.mk s!"./pdfs/{pageName}")) with
