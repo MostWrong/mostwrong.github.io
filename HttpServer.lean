@@ -226,6 +226,9 @@ def processMarkdown (content: String) : String := Id.run do
       processed := processed ++ processLinks line ++ "<br>"
   processed
 
+def createSubstackHeader : String :=
+  "<div class=\"substack-header\"><a href=\"https://substack.com/@typeofemale\">📖 Read and subscribe to my Substack newsletters, Algorithmically Gavaged Intelligence and Antediluvian Garrulous Autodidatic Midshit Polymath for my musings, I will use this blog for more technical stuff!!</a></div>"
+
 def generateHTML (post : Post) (cssContent: String) : String :=
   "<html>" ++
   "<head><meta charset='UTF-8'>" ++
@@ -238,6 +241,7 @@ def generateHTML (post : Post) (cssContent: String) : String :=
     "<script>hljs.highlightAll();</script>" ++
   "</head>" ++
   "<body class=\"trans-theme\">" ++
+    createSubstackHeader ++
     "<h1>" ++ post.title ++ "</h1>" ++
     "<p>By " ++ post.author ++ " on " ++ post.date ++ "</p>" ++
     "<div class='content'>" ++ processMarkdown post.content ++ "</div>" ++
@@ -249,6 +253,7 @@ def generateIndex (posts: List Post) (cssContent: String) : String :=
     s!"<li><a href=\"/{post.fileName}\">{post.date} - {post.title}</a></li>")
   let linksList := String.intercalate "\n" links
   "<html><meta charset='UTF-8'><head><style>" ++ cssContent ++ "</style><title>typeo's musings (lean edition)</title></head><body class=\"trans-theme\">" ++
+  createSubstackHeader ++
   "<h1>Braindump: </h1>" ++
   s!"<ul>{linksList}</ul>" ++
   "</body></html>"
