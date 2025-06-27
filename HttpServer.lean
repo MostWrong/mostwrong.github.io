@@ -263,10 +263,10 @@ def generateHTML (post : Post) (cssContent: String) : String :=
     "<meta name=\"twitter:description\" content=\"" ++ description ++ "\">" ++
     "<meta name=\"twitter:image\" content=\"https://opengraph.b-cdn.net/production/images/cfeffbda-d434-4947-8d77-72e625e45ddd.png?token=x_7De8P3jB4TkwvQvkgdEwEq2vvZvYEE5QJUTjys5hU&height=1024&width=1024&expires=33287032168\">" ++
     "<style>" ++ cssContent ++ "</style>" ++
-    "<link rel=\"stylesheet\" href=\"[https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css](https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css)\">" ++
-    "<script src=\"[https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js](https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js)\"></script>" ++
-    "<script src=\"[https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/rust.min.js](https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/rust.min.js)\"></script>" ++
-    "<script src=\"[https://unpkg.com/highlightjs-lean/dist/lean.min.js](https://unpkg.com/highlightjs-lean/dist/lean.min.js)\"></script>" ++
+    "<link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css\">" ++
+    "<script src=\"https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js\"></script>" ++
+    "<script src=\"https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/rust.min.js\"></script>" ++
+    "<script src=\"https://unpkg.com/highlightjs-lean/dist/lean.min.js\"></script>" ++
     "<script>hljs.highlightAll();</script>" ++
   "</head>" ++
   "<body class=\"trans-theme\">" ++
