@@ -185,23 +185,33 @@ def String.splitReturnDelimiters (s : String) (p : Char → Bool) : List String 
   splitReturnDelimitersAux s p 0 0 []
 
 def processLinks (line: String) : String :=
-  let parts := line.split (λ c => c == '[' || c == ']' || c == '(' || c == ')')
+  -- Simple approach: look for pattern [text](url)
+  let parts := line.splitOn "["
 
-  let rec process (l: List String) (acc: String) : String :=
-    match l with
-    | [] => acc
-    | [x] => acc ++ x
-    | (x :: y :: []) => acc ++ x ++ y
-    | (x :: y :: z :: rest) =>
-      if x == "" then
-        process (y :: z :: rest) acc
-      else if y == "" && z.startsWith "http" then
-        process rest (acc ++ s!"<a href=\"{z}\">{x}</a>")
-      else
-        process (y :: z :: rest) (acc ++ x)
-
-  process parts ""
-
+  parts.enum.foldl (fun acc (i, part) =>
+    if i == 0 then
+      acc ++ part
+    else
+      -- part starts after a '[', look for ']('
+      match part.splitOn "](" with
+      | linkText :: rest =>
+        if rest.length > 0 then
+          -- Found '](' pattern
+          let remaining := String.intercalate "](" rest
+          match remaining.splitOn ")" with
+          | url :: afterLink =>
+            if afterLink.length > 0 then
+              -- Found complete link pattern
+              acc ++ s!"<a href=\"{url}\">{linkText}</a>" ++ String.intercalate ")" afterLink
+            else
+              -- No closing ')'
+              acc ++ "[" ++ part
+          | [] => acc ++ "[" ++ part
+        else
+          -- No '](' found
+          acc ++ "[" ++ part
+      | [] => acc ++ "[" ++ part
+  ) ""
 
 def processMarkdown (content: String) : String := Id.run do
   let lines := content.splitOn "\n"
