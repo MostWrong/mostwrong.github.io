@@ -4,7 +4,7 @@ date: 2025-06-27
 author: typeofemale
 ---
 
-Maya ([@mayaofspring on Twitter](https://x.com/mayaofspring)) and I have decided to team up and work on [Effective Transsexualism](https://effecttrans.com/). Over the past couple of weeks, we've been meeting trans people across the country and from different walks of life (Cambridge, London, and Oxford so far!) in order to build a network of people to help navigate life in these uncertain times.
+Maya ([@mayaofspring on Twitter](https://x.com/mayaofspring)) and I have decided to team up and work on [Effective Transsexualism](https://effecttrans.com/). Over the past couple of weeks, we've been meeting trans people across the country and from different walks of life (Cambridge, London, and Oxford so far!) in order to build a network of people to help navigate life in these uncertain times. Her twitter thread on Effective Transsexualism can be found [here](https://x.com/mayaofspring/status/1938365280926781626).
 
 Maya is one of the humblest and kindest people I've had the privilege of interacting with, and after a couple of discussions, it became clear that whilst it was certainly possible for us to leave this country - we could use our privilege to help improve the optics of trans people in the United Kingdom. Coincidentally, we happened to be near [Newspeak House](https://newspeak.house/events) during one of our discussions, which led to us hosting our events there. (Newspeak is one of London's hidden gems - I'm usually there on Wednesday evenings for Ration Club; feel free to say hello!)
 
