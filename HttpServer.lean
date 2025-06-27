@@ -249,10 +249,19 @@ def generateHTML (post : Post) (cssContent: String) : String :=
   "<html>" ++
   "<head><meta charset='UTF-8'>" ++
     "<title>" ++ post.title ++ "</title>" ++
-    "<meta property=\"og:title\" content=\"" ++ post.title ++ "\" />" ++
-    "<meta property=\"og:type\" content=\"article\" />" ++
+    "<meta name=\"description\" content=\"" ++ description ++ "\">" ++
+    "<meta property=\"og:url\" content=\"https://typeofemale.me\">" ++
+    "<meta property=\"og:type\" content=\"article\">" ++
+    "<meta property=\"og:title\" content=\"" ++ post.title ++ "\">" ++
+    "<meta property=\"og:description\" content=\"" ++ description ++ "\">" ++
+    "<meta property=\"og:image\" content=\"https://opengraph.b-cdn.net/production/images/cfeffbda-d434-4947-8d77-72e625e45ddd.png?token=x_7De8P3jB4TkwvQvkgdEwEq2vvZvYEE5QJUTjys5hU&height=1024&width=1024&expires=33287032168\">" ++
     "<meta property=\"article:author\" content=\"" ++ post.author ++ "\" />" ++
-    "<meta property=\"og:description\" content=\"" ++ description ++ "\" />" ++
+    "<meta name=\"twitter:card\" content=\"summary_large_image\">" ++
+    "<meta property=\"twitter:domain\" content=\"typeofemale.me\">" ++
+    "<meta property=\"twitter:url\" content=\"https://typeofemale.me\">" ++
+    "<meta name=\"twitter:title\" content=\"" ++ post.title ++ "\">" ++
+    "<meta name=\"twitter:description\" content=\"" ++ description ++ "\">" ++
+    "<meta name=\"twitter:image\" content=\"https://opengraph.b-cdn.net/production/images/cfeffbda-d434-4947-8d77-72e625e45ddd.png?token=x_7De8P3jB4TkwvQvkgdEwEq2vvZvYEE5QJUTjys5hU&height=1024&width=1024&expires=33287032168\">" ++
     "<style>" ++ cssContent ++ "</style>" ++
     "<link rel=\"stylesheet\" href=\"[https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css](https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css)\">" ++
     "<script src=\"[https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js](https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js)\"></script>" ++
@@ -274,8 +283,18 @@ def generateIndex (posts: List Post) (cssContent: String) : String :=
   let linksList := String.intercalate "\n" links
   "<html><meta charset='UTF-8'><head>" ++
   "<title>typeo's musings (lean edition)</title>" ++
-  "<meta property=\"og:title\" content=\"typeo's musings (lean edition)\" />" ++
-  "<meta property=\"og:description\" content=\"A collection of posts by typeofemale.\" />" ++
+  "<meta name=\"description\" content=\"A collection of posts by typeofemale.\">" ++
+  "<meta property=\"og:url\" content=\"https://typeofemale.me\">" ++
+  "<meta property=\"og:type\" content=\"website\">" ++
+  "<meta property=\"og:title\" content=\"typeo's musings (lean edition)\">" ++
+  "<meta property=\"og:description\" content=\"A collection of posts by typeofemale.\">" ++
+  "<meta property=\"og:image\" content=\"https://opengraph.b-cdn.net/production/images/cfeffbda-d434-4947-8d77-72e625e45ddd.png?token=x_7De8P3jB4TkwvQvkgdEwEq2vvZvYEE5QJUTjys5hU&height=1024&width=1024&expires=33287032168\">" ++
+  "<meta name=\"twitter:card\" content=\"summary_large_image\">" ++
+  "<meta property=\"twitter:domain\" content=\"typeofemale.me\">" ++
+  "<meta property=\"twitter:url\" content=\"https://typeofemale.me\">" ++
+  "<meta name=\"twitter:title\" content=\"typeo's musings (lean edition)\">" ++
+  "<meta name=\"twitter:description\" content=\"A collection of posts by typeofemale.\">" ++
+  "<meta name=\"twitter:image\" content=\"https://opengraph.b-cdn.net/production/images/cfeffbda-d434-4947-8d77-72e625e45ddd.png?token=x_7De8P3jB4TkwvQvkgdEwEq2vvZvYEE5QJUTjys5hU&height=1024&width=1024&expires=33287032168\">" ++
   "<style>" ++ cssContent ++ "</style></head><body class=\"trans-theme\">" ++
   createSubstackHeader ++
   "<h1>Braindump: </h1>" ++

@@ -1,0 +1,21 @@
+---
+title: "Effective Transsexualism"
+date: 2025-06-27
+author: typeofemale
+---
+
+Maya ([@mayaofspring on Twitter](https://x.com/mayaofspring)) and I have decided to team up and work on [Effective Transsexualism](https://effecttrans.com/). Over the past couple of weeks, we've been meeting trans people across the country and from different walks of life (Cambridge, London, and Oxford so far!) in order to build a network of people to help navigate life in these uncertain times.
+
+Maya is one of the humblest and kindest people I've had the privilege of interacting with, and after a couple of discussions, it became clear that whilst it was certainly possible for us to leave this country - we could use our privilege to help improve the optics of trans people in the United Kingdom. Coincidentally, we happened to be near [Newspeak House](https://newspeak.house/events) during one of our discussions, which led to us hosting our events there. (Newspeak is one of London's hidden gems - I'm usually there on Wednesday evenings for Ration Club; feel free to say hello!)
+
+It feels surreal that transitioning during a Conservative government came with fewer restrictions in terms of my personal liberties than the present administration, even if the sex-segregated toilets idea was popularised by Liz Truss in 2022. The issues which matter to most trans people are very similar - irrespective of whether they transitioned over twenty years ago and have completely assimilated, or whether they're someone who is newly out; everyone faces uncertainty for it is very hard to trust the [government's] plan for people like us.
+
+There have been consecutive waves of bad news for trans people in the United Kingdom: the Cass Report, the recent bioessentialist UKSC ruling, and the upcoming Levy review of adult care. EHRC guidance is up in the air, and it certainly doesn't help that Kishwer Falkner and Akua Reindorf believe that trans people should experience ['a correction in terms of the rights they enjoy'](https://www.theguardian.com/society/2025/jun/06/ehrc-commissioner-calls-for-trans-people-to-accept-reduced-rights-after-years-of-lies). Waiting lists for accessing relevant healthcare are soaring, with paternalistic doctors gatekeeping patients based on antediluvian views on psychiatry and endocrinology. It's understandable that this has an impact on trans people, and we feel that one of the most impactful uses of our time is to provide useful information and mutual aid which would combat the general atmosphere of doom, help trans people navigate their lives, and be better-informed when interacting with other stakeholders who take decisions which affect their lives.
+
+We believe that monitoring the situation is prudent, especially considering people who steadfastly believe that nothing ever happens were taken by surprise several times over the past months. Our aim is to publish a prescient analysis of the evolving legal, medical, social, and political landscape so that people can see what we know, how we know what we know, and be better prepared - be it something like a meeting with human resources personnel on what toilet to use, or with their doctor who refuses to do shared care; and if things go awry - they have a network of people they can discuss their issues with and get help from people with shared experiences. 
+
+Sex Matters and other gender-critical organisations have been very, very efficient at managing to proselytise a burgeoning section of the population to their side. We are a single-focus organisation trying to improve acceptance of trans people without trying to antagonise and alienate other people. 
+
+Anecdotes are powerful - information which we can share and present to increase awareness and improve public opinion in these times. If you're a trans person, or an ally in the UK who would be interested in sharing any information which would be useful for other people to know (including your own story!), feel free to reach out to us!
+
+Note: We are aware that the term 'transsexualism' has some negative connotations associated with it; sex matters and we want to reclaim the term in order to bring more attention to the inalienable right to change an individual's sex assigned at birth via legal and medical means.
