@@ -239,15 +239,25 @@ def processMarkdown (content: String) : String := Id.run do
 def createSubstackHeader : String :=
   "<div class=\"substack-header\"><a href=\"https://substack.com/@typeofemale\">📖 Read and subscribe to my Substack newsletters, Algorithmically Gavaged Intelligence and Antediluvian Garrulous Autodidatic Midshit Polymath for my musings, I will use this blog for more technical stuff!!</a></div>"
 
+def getShortDescription (content: String) : String :=
+  let words := content.splitOn " "
+  let first30 := words.take 30
+  String.intercalate " " first30
+
 def generateHTML (post : Post) (cssContent: String) : String :=
+  let description := getShortDescription post.content
   "<html>" ++
   "<head><meta charset='UTF-8'>" ++
     "<title>" ++ post.title ++ "</title>" ++
+    "<meta property=\"og:title\" content=\"" ++ post.title ++ "\" />" ++
+    "<meta property=\"og:type\" content=\"article\" />" ++
+    "<meta property=\"article:author\" content=\"" ++ post.author ++ "\" />" ++
+    "<meta property=\"og:description\" content=\"" ++ description ++ "\" />" ++
     "<style>" ++ cssContent ++ "</style>" ++
-    "<link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css\">" ++
-    "<script src=\"https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js\"></script>" ++
-    "<script src=\"https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/rust.min.js\"></script>" ++
-    "<script src=\"https://unpkg.com/highlightjs-lean/dist/lean.min.js\"></script>" ++
+    "<link rel=\"stylesheet\" href=\"[https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css](https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css)\">" ++
+    "<script src=\"[https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js](https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js)\"></script>" ++
+    "<script src=\"[https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/rust.min.js](https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/rust.min.js)\"></script>" ++
+    "<script src=\"[https://unpkg.com/highlightjs-lean/dist/lean.min.js](https://unpkg.com/highlightjs-lean/dist/lean.min.js)\"></script>" ++
     "<script>hljs.highlightAll();</script>" ++
   "</head>" ++
   "<body class=\"trans-theme\">" ++
@@ -262,11 +272,16 @@ def generateIndex (posts: List Post) (cssContent: String) : String :=
   let links := posts.map (λ post =>
     s!"<li><a href=\"/{post.fileName}\">{post.date} - {post.title}</a></li>")
   let linksList := String.intercalate "\n" links
-  "<html><meta charset='UTF-8'><head><style>" ++ cssContent ++ "</style><title>typeo's musings (lean edition)</title></head><body class=\"trans-theme\">" ++
+  "<html><meta charset='UTF-8'><head>" ++
+  "<title>typeo's musings (lean edition)</title>" ++
+  "<meta property=\"og:title\" content=\"typeo's musings (lean edition)\" />" ++
+  "<meta property=\"og:description\" content=\"A collection of posts by typeofemale.\" />" ++
+  "<style>" ++ cssContent ++ "</style></head><body class=\"trans-theme\">" ++
   createSubstackHeader ++
   "<h1>Braindump: </h1>" ++
   s!"<ul>{linksList}</ul>" ++
   "</body></html>"
+
 
 def main : IO Unit := do
   let sock ← Socket.mk Socket.AddressFamily.inet Socket.Typ.stream
