@@ -297,6 +297,7 @@ def generateIndex (posts: List Post) (cssContent: String) : String :=
   "<meta name=\"twitter:image\" content=\"https://opengraph.b-cdn.net/production/images/cfeffbda-d434-4947-8d77-72e625e45ddd.png?token=x_7De8P3jB4TkwvQvkgdEwEq2vvZvYEE5QJUTjys5hU&height=1024&width=1024&expires=33287032168\">" ++
   "<style>" ++ cssContent ++ "</style></head><body class=\"trans-theme\">" ++
   createSubstackHeader ++
+  "योजना पर भरोसा करें।" ++
   "<h1>Braindump: </h1>" ++
   s!"<ul>{linksList}</ul>" ++
   "</body></html>"
