@@ -7,7 +7,7 @@ author: typeofemale
 
 I’d like to preface this poast by thanking several people who would prefer to stay anonymous – discussions with them indirectly contributed to a significant proportion of the content in this post. These ramblings are supposed to summarise my own personal feelings towards the subject based on my experiences living in India.
 
-I admit I have a vested interest in this subject -- I went to school in India, and choose to idenitfy as a transgender woman, both in real-life, and on the internet. I usually refrain from publicising the fact that I am trans, for reasons related to embarrassment and safety. My primary motivation is twofold -- to make cis people realise the hardships borne by trans people, along with making trans people (especially trans people from South Asia) feel seen and valid.
+I admit I have a vested interest in this subject -- I went to school in India, and choose to identify as a transgender woman, both in real-life, and on the internet. I usually refrain from publicising the fact that I am trans, for reasons related to embarrassment and safety. My primary motivation is twofold -- to make cis people realise the hardships borne by trans people, along with making trans people (especially trans people from South Asia) feel seen and valid.
 
 Presently, transgender people are often characterised by the presence of dysphoria, and subsequent medical regimens designed to alleviate it. As the term "transgender" is supposed to encompass a spectrum of gender identities – adapting the term in an appropriate cultural context is often challenging.
 
