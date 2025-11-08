@@ -154,6 +154,18 @@ def parseFrontMatter (content: String) : Option Post := do
 
       some { title := title, date := date, author := author, content := content, fileName := "" }
 
+def insertPost (post : Post) : List Post → List Post
+  | [] => [post]
+  | head :: tail =>
+    if post.date > head.date then
+      post :: head :: tail
+    else
+      head :: insertPost post tail
+
+def sortPostsByDate : List Post → List Post
+  | [] => []
+  | head :: tail => insertPost head (sortPostsByDate tail)
+
 def loadPosts (dir: System.FilePath) : IO (List Post) := do
   let poastsDir := dir / "poasts"
   let entries ← poastsDir.readDir
@@ -166,7 +178,7 @@ def loadPosts (dir: System.FilePath) : IO (List Post) := do
         let post := {post with fileName := entry.fileName.dropRight 3}
         posts := posts ++ [post]
       | none => continue
-  return posts.reverse
+  return sortPostsByDate posts
 
 def String.splitReturnDelimitersAux (s : String) (p : Char → Bool) (b : Pos) (i : Pos) (r : List String) : List String :=
   if h : s.atEnd i then
